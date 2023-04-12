@@ -64,22 +64,24 @@ onAfterServiceScaleOut[nosqldb]:
 - api[nosqldb]: environment.control.RestartNodesByGroup
 
 onBeforeScaleIn[nosqldb]:
-- forEach(osnode:event.response.nodes):
-    - removeNodeFromCluster:
-        nodeAddress: ${@osnode.address}
-    - if ('${settings.is_opensearchdashboards}' == 'true'):
-        - cmd[odash]: |-
-            sed -ci -e '/- ${globals.protocol}:\/\/${@osnode.address}:9200/d' ${globals.oSearchDashConfig}
-        - api[odash]: environment.control.RestartNodesByGroup
-    - if ('${settings.is_logstash}' == 'true'):
-        - cmd[lstash]: |-
-            sed -ci -e 's/[,]*"${@osnode.address}"[,]*//' ${globals.lstashPipelineConfig};
-            sed -ci -e 's/""/","/' ${globals.lstashPipelineConfig};
-        - api[lstash]: environment.control.RestartNodesByGroup
-    - cmd[${nodes.nosqldb.master.id}]: |-
-        curl -X POST "${globals.protocol}://localhost:9200/_cluster/voting_config_exclusions?node_names=node${@osnode.id}&pretty" -u 'internal:${globals.intPswd}' --insecure
+  - detectProtocol 
+  - forEach(osnode:event.response.nodes):
+      - removeNodeFromCluster:
+          nodeAddress: ${@osnode.address}
+      - if ('${settings.is_opensearchdashboards}' == 'true'):
+          - cmd[odash]: |-
+              sed -ci -e '/- ${globals.protocol}:\/\/${@osnode.address}:9200/d' ${globals.oSearchDashConfig}
+          - api[odash]: environment.control.RestartNodesByGroup
+      - if ('${settings.is_logstash}' == 'true'):
+          - cmd[lstash]: |-
+              sed -ci -e 's/[,]*"${@osnode.address}"[,]*//' ${globals.lstashPipelineConfig};
+              sed -ci -e 's/""/","/' ${globals.lstashPipelineConfig};
+          - api[lstash]: environment.control.RestartNodesByGroup
+      - cmd[${nodes.nosqldb.master.id}]: |-
+          curl -X POST "${globals.protocol}://localhost:9200/_cluster/voting_config_exclusions?node_names=node${@osnode.id}&pretty" -u 'internal:${globals.intPswd}' --insecure
         
 onAfterScaleIn[nosqldb]:
+  - detectProtocol
   - cmd[nosqldb]: |-
       sudo service opensearch stop;
   - startAndWait:
@@ -143,6 +145,7 @@ actions:
         sed -ci -e 's/[,]*"${this.nodeAddress}"[,]*//' ${globals.oSearchConfig}; sed -ci -e 's/""/","/' ${globals.oSearchConfig};
         
   setOpensearchHostname:
+    - detectProtocol
     - cmd[odash]: |-
         sed -ci -e 's/^opensearch.hosts.*/opensearch.hosts:/' ${globals.oSearchDashConfig};        
         grep -q '^[[:space:]]*- (http|https)://${this.nodeAddress}:9200' ${globals.oSearchDashConfig} || sed -ci -e '/^opensearch.hosts/ a\  - ${globals.protocol}://${this.nodeAddress}:9200' ${globals.oSearchDashConfig};
@@ -223,6 +226,7 @@ actions:
     - api[odash]: environment.control.RestartNodesByGroup
     
   startAndWait:
+    - detectProtocol
     - cmd[${this.nodeId}]: |-
         sudo service opensearch start;
         retries=20; while [ $retries -gt 0 ]; do [[ $(curl -k -s -w "%{http_code}" ${globals.protocol}://localhost:9200/ -o /dev/null) != "401" ]] || break; sleep 10; let retries=${retries}-1; done
