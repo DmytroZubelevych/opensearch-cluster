@@ -235,7 +235,7 @@ actions:
 
   detectProtocol:
     - cmd[nosqldb]: grep -q '[[:space:]]*plugins.security.ssl.http.enabled:[[:space:]]*true' /etc/opensearch/opensearch.yml && echo 'https' || echo 'http'
-    - setGlobals 
+    - setGlobals: 
         protocol: ${response.out}
       
   reInstallClusteringLogic:
