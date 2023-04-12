@@ -10,7 +10,7 @@ The OpenSearch cluster consists of the following components:
 - **OpenSearch** - a community-driven, open-source search engine (based on the Jelastic _OpenSearch_ certified template) that provides a distributed, multitenant-capable full-text search
 - **OpenSearch Dashboards** (optional) - a stack for visualizing data that is stored inside the _OpenSearch_ nodes
 - **Logstash** (optional) - additional node(s) for data processing
-- **Beats** (optional) - separate add-on ([jelastic-jps/beats-jps-addon](https://github.com/jelastic-jps/beats-jps-addon)) for single-purpose data shippers that send data from the client nodes to _Logstash_ or _OpenSearch_
+- **Beats** (optional) - separate add-on ([DmytroZubelevych/beats-jps-addon](https://github.com/DmytroZubelevych/beats-jps-addon)) for single-purpose data shippers that send data from the client nodes to _Logstash_ or _OpenSearch_
 
 <p align="center"> <img src="images/01-opensearch-cluster-scheme.png" alt="OpenSearch cluster scheme"> </p>
 
@@ -18,7 +18,7 @@ The OpenSearch cluster consists of the following components:
 
 Click the **Deploy to Jelastic** button below, specify your email address within the widget, choose one of the [Jelastic Public Cloud](https://jelastic.cloud/) providers and click **Install**.
 
-[![deploy button](https://jelastic.com/getithosted/button.png)](https://jelastic.com/install-application/?manifest=https://raw.githubusercontent.com/jelastic-jps/opensearch-cluster/main/manifest.jps)
+[![deploy button](https://jelastic.com/getithosted/button.png)](https://jelastic.com/install-application/?manifest=https://raw.githubusercontent.com/DmytroZubelevych/opensearch-cluster/main/manifest.jps)
 
 > **Note:** If you are already registered at Jelastic, you can deploy this cluster from the [topology wizard](https://docs.jelastic.com/setting-up-environment/) by selecting the **OpenSearch** stack at the _NoSQL database_ section:
 >
