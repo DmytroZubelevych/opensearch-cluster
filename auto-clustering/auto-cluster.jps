@@ -148,7 +148,7 @@ actions:
     - detectProtocol
     - cmd[odash]: |-
         sed -ci -e 's/^opensearch.hosts.*/opensearch.hosts:/' ${globals.oSearchDashConfig};        
-        grep -q '^[[:space:]]*- (http|https)://${this.nodeAddress}:9200' ${globals.oSearchDashConfig} || sed -ci -e '/^opensearch.hosts/ a\  - ${globals.protocol}://${this.nodeAddress}:9200' ${globals.oSearchDashConfig};
+        grep -q '^[[:space:]]*- \(http\|https\)://${this.nodeAddress}:9200' ${globals.oSearchDashConfig} || sed -ci -e '/^opensearch.hosts/ a\  - ${globals.protocol}://${this.nodeAddress}:9200' ${globals.oSearchDashConfig};
       user: root
       
   setKibanaserverPassword:
