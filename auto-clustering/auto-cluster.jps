@@ -70,7 +70,7 @@ onBeforeScaleIn[nosqldb]:
           nodeAddress: ${@osnode.address}
       - if ('${settings.is_opensearchdashboards}' == 'true'):
           - cmd[odash]: |-
-              sed -ci -e '/- ${globals.protocol}:\/\/${@osnode.address}:9200/d' ${globals.oSearchDashConfig}
+              sed -ci -e '/- \(http\|https\):\/\/${@osnode.address}:9200/d' ${globals.oSearchDashConfig}
           - api[odash]: environment.control.RestartNodesByGroup
       - if ('${settings.is_logstash}' == 'true'):
           - cmd[lstash]: |-
